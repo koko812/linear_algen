@@ -45,7 +45,7 @@ def make_equation(dim=None, A=None, x=None):
     
 
 if __name__ == "__main__":
-    A,b,_ =make_equation(x=[1,2])
+    A,b,_ =make_equation(x=[1,2,3,4])
     #print(A)
     #print(b)
     print(f"answer = {gauss_del(A,b)}")
