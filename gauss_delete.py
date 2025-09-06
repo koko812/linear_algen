@@ -1,3 +1,5 @@
+import random
+
 A = [[1,1,1],
     [2,-1,1],
     [1,2,-1]]
@@ -24,5 +26,26 @@ def gauss_del(A, b):
             
     return ex_A 
 
+
+def make_equation(dim=None, A=None, x=None):
+    if dim is None:
+        dim = len(x)
+    if A is None:
+        print(f"dim = {dim}")
+        A = [[random.randint(-5,5) for i in range(dim)] for i in range(dim)]
+    if x is None:
+        x = [random.randint(1, 8) for i in range(dim)]
+
+    #print(A,x)
+    b = [[sum([aa*xx for aa, xx in zip(a, x)])] for a in A]
+    print(f"A = {A}")
+    print(f"b = {b}")
+    print(f"x = {x}")
+    return A,b,x
+    
+
 if __name__ == "__main__":
-    print(gauss_del(A,b))
+    A,b,_ =make_equation(x=[1,2])
+    #print(A)
+    #print(b)
+    print(f"answer = {gauss_del(A,b)}")
