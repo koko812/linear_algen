@@ -57,6 +57,7 @@ if __name__ == "__main__":
     print(shape_d)
     o_x, o_y = _to_coodinate(shape)
     d_x, d_y = _to_coodinate(shape_d)
+    eig_vec2, eig_val2 = power_method(A, [[v] for v in eig_vec])
 
     cross_norm = ((1 / eig_vec[0] * eig_vec[1])**2 + 1)**0.5
     plt.plot(o_x, o_y)
