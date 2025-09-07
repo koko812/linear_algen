@@ -50,6 +50,11 @@ def power_method(A,v):
     print(f"eigen_value: {eig_val}")
     return [nn for n in normalized_n_v for nn in n], eig_val
 
+def gram_shumit(u, v):
+    scale = vecmul(u,v)/vecmul(v,v)
+    return [[uu[0] - vv[0]*scale] for uu, vv in zip(u,v)]
+
+
 if __name__ == "__main__":
     print(shape)
     shape_d = [matmul(A,v) for v in shape]
@@ -57,7 +62,8 @@ if __name__ == "__main__":
     print(shape_d)
     o_x, o_y = _to_coodinate(shape)
     d_x, d_y = _to_coodinate(shape_d)
-    eig_vec2, eig_val2 = power_method(A, [[v] for v in eig_vec])
+    print("norm:",vecmul([[e] for e in eig_vec], gram_shumit(ini_v, [[e] for e in eig_vec])))
+    eig_vec2, eig_val2 = power_method(A, gram_shumit(ini_v, [[e] for e in eig_vec]))
 
     cross_norm = ((1 / eig_vec[0] * eig_vec[1])**2 + 1)**0.5
     plt.plot(o_x, o_y)
