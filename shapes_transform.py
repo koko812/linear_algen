@@ -7,7 +7,7 @@ v3 = [[-1], [-1]]
 v4 = [[-1], [1]]
 shape = [v1,v2,v3,v4]
 
-A = [[2,1], [1,0.8]]
+A = [[2,1], [1,1.5]]
 ini_v = [[5],[-4]]
 
 def matmul(A, v):
@@ -50,6 +50,23 @@ def power_method(A,v):
     print(f"eigen_value: {eig_val}")
     return [nn for n in normalized_n_v for nn in n], eig_val
 
+def second_power_method(A,v,v_first):
+    print(f"A = {A}")
+    print(f"v  = {v}")
+    v_norm = norm(v)
+    v = normalized_n_v = [[vv[0]/v_norm] for vv in v]
+    for i in range(1000):
+        n_v = matmul(A,v)
+        n_v_norm = norm(n_v)
+        normalized_n_v = [[n_vv[0]/n_v_norm] for n_vv in n_v]
+        #print(normalized_n_v)
+        #print(vecmul(normalized_n_v, matmul(A, normalized_n_v)))
+        v = gram_shumit(normalized_n_v, v_first)
+    print(f"eigen_vector: {normalized_n_v}")
+    eig_val = vecmul(normalized_n_v, matmul(A, normalized_n_v))
+    print(f"eigen_value: {eig_val}")
+    return [nn for n in normalized_n_v for nn in n], eig_val
+
 def gram_shumit(u, v):
     scale = vecmul(u,v)/vecmul(v,v)
     return [[uu[0] - vv[0]*scale] for uu, vv in zip(u,v)]
@@ -63,12 +80,13 @@ if __name__ == "__main__":
     o_x, o_y = _to_coodinate(shape)
     d_x, d_y = _to_coodinate(shape_d)
     print("norm:",vecmul([[e] for e in eig_vec], gram_shumit(ini_v, [[e] for e in eig_vec])))
-    eig_vec2, eig_val2 = power_method(A, gram_shumit(ini_v, [[e] for e in eig_vec]))
+    eig_vec2, eig_val2 = second_power_method(A, gram_shumit(ini_v, [[e] for e in eig_vec]), [[e] for e in eig_vec])
 
     cross_norm = ((1 / eig_vec[0] * eig_vec[1])**2 + 1)**0.5
     plt.plot(o_x, o_y)
     plt.plot(d_x, d_y)
     plt.quiver(0, 0, eig_vec[0]*eig_val*cross_norm, eig_vec[1]*eig_val*cross_norm, angles='xy', scale_units='xy', scale=1, color='r', label='eigenvector λ≈2.618')
+    plt.quiver(0, 0, eig_vec2[0]*eig_val2, eig_vec2[1]*eig_val2, angles='xy', scale_units='xy', scale=1, color='b', label='eigenvector λ≈2.618')
     plt.gca().set_aspect('equal', adjustable='box')
     plt.grid()
     plt.savefig("plt.png")
