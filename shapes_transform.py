@@ -7,7 +7,7 @@ v3 = [[-1], [-1]]
 v4 = [[-1], [1]]
 shape = [v1,v2,v3,v4]
 
-A = [[2,1], [1,1]]
+A = [[2,1], [1,0.8]]
 ini_v = [[5],[-4]]
 
 def matmul(A, v):
@@ -46,17 +46,22 @@ def power_method(A,v):
         #print(vecmul(normalized_n_v, matmul(A, normalized_n_v)))
         v = normalized_n_v
     print(f"eigen_vector: {normalized_n_v}")
-    print(f"eigen_value: {vecmul(normalized_n_v, matmul(A, normalized_n_v))}")
+    eig_val = vecmul(normalized_n_v, matmul(A, normalized_n_v))
+    print(f"eigen_value: {eig_val}")
+    return [nn for n in normalized_n_v for nn in n], eig_val
 
 if __name__ == "__main__":
     print(shape)
     shape_d = [matmul(A,v) for v in shape]
-    power_method(A, ini_v)
+    eig_vec, eig_val = power_method(A, ini_v)
     print(shape_d)
     o_x, o_y = _to_coodinate(shape)
     d_x, d_y = _to_coodinate(shape_d)
+
+    cross_norm = ((1 / eig_vec[0] * eig_vec[1])**2 + 1)**0.5
     plt.plot(o_x, o_y)
     plt.plot(d_x, d_y)
+    plt.quiver(0, 0, eig_vec[0]*eig_val*cross_norm, eig_vec[1]*eig_val*cross_norm, angles='xy', scale_units='xy', scale=1, color='r', label='eigenvector λ≈2.618')
     plt.gca().set_aspect('equal', adjustable='box')
     plt.grid()
     plt.savefig("plt.png")
